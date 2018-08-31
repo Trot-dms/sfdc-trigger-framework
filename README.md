@@ -14,6 +14,12 @@ The base class also provides a secondary role as a supervisor for Trigger execut
 
 But the most important part of this framework is that it's minimal and simple to use. 
 
+**Deploy to SFDX Scratch Org:**
+[![Deploy](https://deploy-to-sfdx.com/dist/assets/images/DeployToSFDX.svg)](https://deploy-to-sfdx.com)
+
+**Deploy to Salesforce Org:**
+[![Deploy](https://raw.githubusercontent.com/afawcett/githubsfdeploy/master/deploy.png)](https://githubsfdeploy.herokuapp.com/?owner=kevinohara80&repo=sfdc-trigger-framework&ref=master)
+
 ## Usage
 
 To create a trigger handler, you simply need to create a class that inherits from **TriggerHandler.cls**. Here is an example for creating an Opportunity trigger handler.
@@ -87,7 +93,7 @@ public class OpportunityTriggerHandler extends TriggerHandler {
 
 ### Bypass API
 
-What if you want to tell other trigger handlers to halt execution? That's easy with the bypass api. Example.
+What if you want to tell other trigger handlers to halt execution? That's easy with the bypass api:
 
 ```java
 public class OpportunityTriggerHandler extends TriggerHandler {
@@ -112,6 +118,24 @@ public class OpportunityTriggerHandler extends TriggerHandler {
 }
 ```
 
+If you need to check if a handler is bypassed, use the `isBypassed` method:
+
+```java
+if (TriggerHandler.isBypassed('AccountTriggerHandler')) {
+  // ... do something if the Account trigger handler is bypassed!
+}
+```
+
+If you want to clear all bypasses for the transaction, simple use the `clearAllBypasses` method, as in:
+
+```java
+// ... done with bypasses!
+
+TriggerHandler.clearAllBypasses();
+
+// ... now handlers won't be ignored!
+```
+
 ## Overridable Methods
 
 Here are all of the methods that you can override. All of the context possibilities are supported.
@@ -123,6 +147,3 @@ Here are all of the methods that you can override. All of the context possibilit
 * `afterUpdate()`
 * `afterDelete()`
 * `afterUndelete()`
-
-
-
